@@ -7,7 +7,7 @@ import os
 # Read data
 #dbf = DBF(os.path.abspath('data/Municipalities_with_topo.dbf'), encoding='utf-8')
 #df = pd.DataFrame(iter(dbf))
-df = pd.read_csv(os.path.abspath('data/Municipalities_with_topo.csv'))
+df = pd.read_csv(os.path.join(os.path.dirname(__file__),'..','data', 'Municipalities_with_topo.csv'))
 
 app = Dash(__name__)
 server = app.server
@@ -35,5 +35,6 @@ def update_bar_chart(dims):
     fig.update_traces(diagonal_visible=False)
     return fig
 
-#http://127.0.0.1:8072/
-app.run_server(debug=True,port=8072) 
+if __name__ == "__main__":
+    app.run_server(debug=True,port=8072)
+    #http://127.0.0.1:8072/
