@@ -30,8 +30,13 @@ variable_options = [
 # Diccionario de etiquetas
 label_map = {option['value']: option['label'] for option in variable_options}
 
+# Estilo global para cambiar la fuente
+global_font_style = {
+    'font-family': 'Roboto'
+}
+
 app.layout = html.Div([
-    html.H4('Matrix Correlations'),
+    html.H4('Scatter Matrix Plot', style={**global_font_style,'text-align': 'center'}),
     html.Div([
         html.Label('Select Variables for Scatter Matrix:'),
         dcc.Dropdown(
@@ -39,16 +44,15 @@ app.layout = html.Div([
             options=variable_options,
             value=['tri1k_mean', 'vrm1k_mean', 'rou1k_mean', 'slp1k_mean'],
             multi=True,
-            style={'width': '80%'}
+            style={'width': '100%', 'max-width': '500px'}
         ),
-    ], style={'width': '100%', 'display': 'flex', 'justify-content': 'center', 'align-items': 'center', 'margin-bottom': '20px'}),
+    ], style={**global_font_style,'width': '100%', 'display': 'flex', 'justify-content': 'center', 'align-items': 'center', 'margin-bottom': '10px'}),
     
     html.Div([
-        html.H5('Scatter Matrix Plot'),
         dcc.Graph(id="scatter_matrix", style={'height': '80vh'})
-    ], style={'width': '100%', 'display': 'flex', 'justify-content': 'center', 'flexDirection': 'column', 'align-items': 'center'}),
+    ], style={'width': '100%', 'display': 'flex', 'flexDirection': 'column', 'align-items': 'center'}),
     
-    html.H4('Strip Plot'),
+    html.H4('Strip Plot', style={**global_font_style,'text-align': 'center'}),
     html.Div([   
         html.Label('Select Variable for Strip Plot:'),
     
@@ -57,14 +61,15 @@ app.layout = html.Div([
             options=variable_options,
             value='tri1k_mean',
             multi=False,
-            style={'width': '40%'}
+            style={**global_font_style,'width': '40%'}
         ),
-    ], style={'width': '100%', 'display': 'flex', 'justify-content': 'center','align-items': 'center', 'margin-bottom': '20px'}),
+    ], style={**global_font_style,'width': '100%', 'display': 'flex', 'justify-content': 'center', 'align-items': 'center', 'margin-bottom': '0px'}),
     
     html.Div([
-        dcc.Graph(id="strip_plot", style={'height': '70vh'})
-    ], style={'width': '100%', 'display': 'flex', 'justify-content': 'center', 'flexDirection': 'column', 'align-items': 'center'})
-])
+        dcc.Graph(id="strip_plot", style={'width': '100%', 'height': '100%'})
+    ], style={'width': '100%', 'display': 'flex', 'flexDirection': 'column', 'align-items': 'center'})
+], style={'width': '100%', 'margin': '0 auto'})
+
 
 
 @app.callback(
