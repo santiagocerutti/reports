@@ -33,50 +33,66 @@ label_map = {option['value']: option['label'] for option in variable_options}
 app.layout = html.Div([
     html.H4('Matrix Correlations'),
     html.Div([
-        html.Label('Select Variables:'),
+        html.Label('Select Variables for Scatter Matrix:'),
         dcc.Dropdown(
-            id="dropdown",
+            id="dropdown_scatter",
             options=variable_options,
             value=['tri1k_mean', 'vrm1k_mean', 'rou1k_mean', 'slp1k_mean'],
             multi=True,
             style={'width': '80%'}
         ),
-    ], style={'width': '100%', 'display': 'flex', 'justify-content': 'center', 'margin-bottom': '20px'}),
+    ], style={'width': '100%', 'display': 'flex', 'justify-content': 'center', 'align-items': 'center', 'margin-bottom': '20px'}),
     
     html.Div([
         html.H5('Scatter Matrix Plot'),
-        dcc.Graph(id="scatter_matrix", style={'height': '70vh'})
+        dcc.Graph(id="scatter_matrix", style={'height': '80vh'})
     ], style={'width': '100%', 'display': 'flex', 'justify-content': 'center', 'flexDirection': 'column', 'align-items': 'center'}),
-
+    
+    html.H4('Strip Plot'),
+    html.Div([   
+        html.Label('Select Variable for Strip Plot:'),
+    
+        dcc.Dropdown(
+            id="dropdown_strip",
+            options=variable_options,
+            value='tri1k_mean',
+            multi=False,
+            style={'width': '40%'}
+        ),
+    ], style={'width': '100%', 'display': 'flex', 'justify-content': 'center','align-items': 'center', 'margin-bottom': '20px'}),
+    
     html.Div([
-        html.H5('Strip Plot'),
         dcc.Graph(id="strip_plot", style={'height': '70vh'})
     ], style={'width': '100%', 'display': 'flex', 'justify-content': 'center', 'flexDirection': 'column', 'align-items': 'center'})
 ])
 
 
 @app.callback(
-    [Output("scatter_matrix", "figure"), Output("strip_plot", "figure")], 
-    [Input("dropdown", "value")]
+    Output("scatter_matrix", "figure"),
+    [Input("dropdown_scatter", "value")]
 )
-def update_bar_chart(dims):
+def update_scatter_matrix(dims):
     fig = px.scatter_matrix(
-        df, 
+        df,
         dimensions=dims,
-        labels={dim: label_map[dim] for dim in dims},
-        height=500,
-        width=800
+        labels={dim: label_map[dim] for dim in dims}
     )
     fig.update_traces(diagonal_visible=False)
-    
+    return fig
+
+@app.callback(
+    Output("strip_plot", "figure"),
+    [Input("dropdown_strip", "value")]
+)
+def update_strip_plot(dim):
     fig2 = px.strip(df,
-                    x=dims,
+                    x=dim,
                     hover_name="NOMGEO",
                     color="CVE_ENT",
                     height=500,
-                    width=800
+                    labels={dim: label_map[dim]}
     )
-    return fig,fig2
+    return fig2
 
 if __name__ == "__main__":
     app.run_server(debug=True,port=8072)
